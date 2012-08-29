@@ -19,7 +19,7 @@ end
 
 NoDevent::Emitter.config = {
   :host => "http://thehost",
-  :namespace => "thenamespace", 
+  :namespace => "/nodevent", 
   :secret => "asdf"
 }
 
@@ -29,7 +29,7 @@ describe NoDevent do
     it { ModelMock.room.should == "ModelMock" }
     
     it "should emit to the right room" do
-      $redis.should_receive(:publish).with("events", 
+      $redis.should_receive(:publish).with("/nodevent", 
                                            {
                                              :room => "ModelMock", 
                                              :event => 'theevent', 
@@ -53,7 +53,7 @@ describe NoDevent do
       it { ModelMock.room.should == "otherRoom" }
       
       it "should emit to the right room" do
-        $redis.should_receive(:publish).with("events", 
+        $redis.should_receive(:publish).with("/nodevent", 
                                              {
                                                :room => "otherRoom", 
                                                :event => 'theevent', 
@@ -76,7 +76,7 @@ describe NoDevent do
 
     it { instance.room.should == "ModelMock_theparam" }
     it "should emit to the right room" do
-      $redis.should_receive(:publish).with("events", 
+      $redis.should_receive(:publish).with("/nodevent", 
                                            {
                                              :room => "ModelMock_theparam", 
                                              :event => 'theevent', 
@@ -87,7 +87,7 @@ describe NoDevent do
     
     describe "#nodevent_create" do
       it "should emit to the right room" do
-      $redis.should_receive(:publish).with("events", 
+      $redis.should_receive(:publish).with("/nodevent", 
                                            {
                                              :room => "ModelMock", 
                                              :event => 'create', 
@@ -98,7 +98,7 @@ describe NoDevent do
     end
     describe "#nodevent_update" do
       it "should emit to the right room" do
-      $redis.should_receive(:publish).with("events", 
+      $redis.should_receive(:publish).with("/nodevent", 
                                            {
                                              :room => "ModelMock_theparam", 
                                              :event => 'update', 
@@ -123,7 +123,7 @@ describe NoDevent do
       it { instance.room.should == "otherRoom" }
       
       it "should emit to the right room" do
-        $redis.should_receive(:publish).with("events", 
+        $redis.should_receive(:publish).with("/nodevent", 
                                              {
                                                :room => "otherRoom", 
                                                :event => 'theevent', 
@@ -140,7 +140,7 @@ describe NoDevent do
       end
       describe "#nodevent_create" do
         it "should emit to the right room" do
-          $redis.should_receive(:publish).with("events", 
+          $redis.should_receive(:publish).with("/nodevent", 
                                                {
                                                  :room => instance.class.room, 
                                                  :event => 'create', 
@@ -151,7 +151,7 @@ describe NoDevent do
       end
       describe "#nodevent_update" do
         it "should emit to the right room" do
-          $redis.should_receive(:publish).with("events", 
+          $redis.should_receive(:publish).with("/nodevent", 
                                                {
                                                  :room => instance.room,
                                                  :event => 'update', 
