@@ -18,9 +18,9 @@ class ModelMock < ActiveRecord::Base
 end
 
 NoDevent::Emitter.config = {
-  :host => "http://thehost",
-  :namespace => "/nodevent", 
-  :secret => "asdf"
+  "host" => "http://thehost",
+  "namespace" => "/nodevent", 
+  "secret" => "asdf"
 }
 
 describe NoDevent do
@@ -42,7 +42,7 @@ describe NoDevent do
       t = Time.now
       ts = (t.to_f*1000).to_i
       ModelMock.room_key(t).should == 
-        (Digest::SHA2.new << "ModelMock" << ts.to_s << NoDevent::Emitter.config[:secret]).to_s
+        (Digest::SHA2.new << "ModelMock" << ts.to_s << NoDevent::Emitter.config["secret"]).to_s
     end
     
     describe "with a custom room name" do
@@ -66,7 +66,7 @@ describe NoDevent do
         t = Time.now
         ts = (t.to_f*1000).to_i
         ModelMock.room_key(t).should == 
-          (Digest::SHA2.new << ModelMock.room << ts.to_s << NoDevent::Emitter.config[:secret]).to_s
+          (Digest::SHA2.new << ModelMock.room << ts.to_s << NoDevent::Emitter.config["secret"]).to_s
       end
     end  
   end
@@ -112,7 +112,7 @@ describe NoDevent do
       t = Time.now
       ts = (t.to_f*1000).to_i
       instance.room_key(t).should == 
-        (Digest::SHA2.new << instance.room << ts.to_s << NoDevent::Emitter.config[:secret]).to_s
+        (Digest::SHA2.new << instance.room << ts.to_s << NoDevent::Emitter.config["secret"]).to_s
     end
     
     describe "with a custom room name" do
@@ -136,7 +136,7 @@ describe NoDevent do
         t = Time.now
         ts = (t.to_f*1000).to_i
         instance.room_key(t).should == 
-          (Digest::SHA2.new << "otherRoom" << ts.to_s << NoDevent::Emitter.config[:secret]).to_s
+          (Digest::SHA2.new << "otherRoom" << ts.to_s << NoDevent::Emitter.config["secret"]).to_s
       end
       describe "#nodevent_create" do
         it "should emit to the right room" do

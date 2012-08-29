@@ -66,8 +66,8 @@ module NoDevent
 
       def config
         @@config ||= Hash.new({
-                                :host => "http://localhost:8080",
-                                :namespace => "/nodevent"
+                                "host" => "http://localhost:8080",
+                                "namespace" => "/nodevent"
                               })
         @@config
       end
@@ -75,7 +75,7 @@ module NoDevent
       def emit(room, name, message)
         room = NoDevent::Emitter.room(room)
 
-        $redis.publish(@@config[:namespace], 
+        $redis.publish(@@config["namespace"], 
                        { :room => room,
                          :event => name, 
                          :message => message}.to_json)
@@ -92,7 +92,7 @@ module NoDevent
         r = room(obj)
         ts = (expires.to_f*1000).to_i
 
-        (Digest::SHA2.new << obj.to_s << ts.to_s<< @@config[:secret]).to_s
+        (Digest::SHA2.new << obj.to_s << ts.to_s<< @@config["secret"]).to_s
       end
     end
   end
