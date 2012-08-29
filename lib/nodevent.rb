@@ -66,7 +66,7 @@ module NoDevent
 
       def config
         @@config ||= Hash.new({
-                                :host => "http://loadsfcalhost:8080",
+                                :host => "http://localhost:8080",
                                 :namespace => "/nodevent"
                               })
         @@config
@@ -75,7 +75,7 @@ module NoDevent
       def emit(room, name, message)
         room = NoDevent::Emitter.room(room)
 
-        $redis.publish("events", 
+        $redis.publish(@@config[:namespace], 
                        { :room => room,
                          :event => name, 
                          :message => message}.to_json)
