@@ -14,12 +14,6 @@ describe NoDevent do
         NoDevent::Emitter.config[:namespace].should be_present
       end
 
-      it "lets you override the config" do
-        NoDevent::Emitter.config = {:host => "foo", :namespace => "other"}
-        
-        NoDevent::Emitter.config[:host].should == "foo"
-        NoDevent::Emitter.config[:namespace].should  == "other"
-      end
     end
     describe "#room" do
       it "gives a room name" do
