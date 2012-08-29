@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/cconstantine/NoDevent-gem.png?branch=master)](http://travis-ci.org/cconstantine/NoDevent-gem)
+
 # Nodevent
 
 TODO: Write a gem description
