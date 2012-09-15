@@ -91,8 +91,8 @@ module NoDevent
       def room_key(obj, expires)
         r = room(obj)
         ts = (expires.to_f*1000).to_i
-
-        (Digest::SHA2.new << obj.to_s << ts.to_s<< @@config["secret"]).to_s
+        hash = (Digest::SHA2.new << obj.to_s << ts.to_s<< @@config["secret"]).to_s
+        "#{hash}:#{ts}"
       end
     end
   end
