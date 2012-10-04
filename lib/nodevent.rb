@@ -1,7 +1,10 @@
 require 'digest/sha2'
 require 'json'
+require 'redis'
+require 'nodevent/net_publisher'
 
 module NoDevent
+
   def self.included(base)
     raise "No longer supported, Please include NoDevent::Base instead"
   end
@@ -58,10 +61,20 @@ module NoDevent
   ActionView::Base.send :include, Helper if defined?(ActionView::Base)
 
   module Emitter
-    @@config = nil
     class << self
       def config= obj
+        @@config = nil
+        @@publisher = nil
         @@config = config.merge(obj)
+        if @@config.keys.include?("redis")
+          r_config = @@config["redis"]
+
+          @@publisher = Redis.new(:host => r_config["host"], :port => r_config["port"], :db => r_config["db"])
+        end
+
+        if @@config.keys.include?("api_key")
+          @@publisher = NoDevent::NetPublisher.new(config)
+        end
       end
 
       def config
@@ -72,10 +85,13 @@ module NoDevent
         @@config
       end
 
+      def publisher
+        @@publisher || $redis
+      end
+
       def emit(room, name, message)
         room = NoDevent::Emitter.room(room)
-
-        $redis.publish(@@config["namespace"], 
+        publisher.publish(config["namespace"],
                        { :room => room,
                          :event => name, 
                          :message => message}.to_json)
@@ -91,7 +107,7 @@ module NoDevent
       def room_key(obj, expires)
         r = room(obj)
         ts = (expires.to_f*1000).to_i
-        hash = (Digest::SHA2.new << obj.to_s << ts.to_s<< @@config["secret"]).to_s
+        hash = (Digest::SHA2.new << r << ts.to_s<< config["secret"]).to_s
         "#{hash}:#{ts}"
       end
     end
