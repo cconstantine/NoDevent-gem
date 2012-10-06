@@ -52,7 +52,9 @@ describe NoDevent do
             "host" => "http://thehost",
             "namespace" => "/nodevent",
             "secret" => "asdf",
-            "api_key"=> "bar",
+            "spigot.io" => {
+              "api_key"=> "bar",
+            }
         }
       end
       it { should be_an_instance_of(NoDevent::NetPublisher)}
