@@ -15,7 +15,7 @@ describe ::NoDevent::NetPublisher do
         subject.namespace.should be_present
       end
       context "#publish" do
-        subject {net_publisher.publish(net_publisher.namespace, {:room => "the_room", :event => "the_event", :message => "the_message"})}
+        subject {net_publisher.publish(net_publisher.namespace, {:room => "the_room", :event => "the_event", :message => "the_message"}.to_json)}
         it {should be_success}
       end
     end

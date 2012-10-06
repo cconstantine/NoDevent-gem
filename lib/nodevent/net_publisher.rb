@@ -28,12 +28,13 @@ module NoDevent
     end
 
     def publish(where, message)
+      message = JSON.parse(message)
       req = {
           :body => {
               :api_key => api_key,
-              :event   => message[:event],
-              :room    => message[:room],
-              :message => message[:message]
+              :event   => message["event"],
+              :room    => message["room"],
+              :message => message["message"]
           }
       }
       self.class.post("http://#{HOSTNAME}/namespaces#{where}/emit",req)
