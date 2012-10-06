@@ -74,6 +74,8 @@ module NoDevent
 
         if @@config.keys.include?("api_key")
           @@publisher = NoDevent::NetPublisher.new(config)
+          config["namespace"] = @@publisher.namespace
+          config["secret"] = @@publisher.secret
         end
       end
 
