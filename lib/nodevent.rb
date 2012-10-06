@@ -55,6 +55,7 @@ module NoDevent
       namespace = NoDevent::Emitter.config['namespace']
       namespace = '/' + namespace unless namespace[0] == '/'
 
+
       "<script src='#{host}/api#{namespace}' type='text/javascript'></script>".html_safe
     end    
   end
@@ -71,9 +72,8 @@ module NoDevent
 
           @@publisher = Redis.new(:host => r_config["host"], :port => r_config["port"], :db => r_config["db"])
         end
-
-        if @@config.keys.include?("api_key")
-          @@publisher = NoDevent::NetPublisher.new(config)
+        if @@config.keys.include?("spigot.io")
+          @@publisher = NoDevent::NetPublisher.new(obj)
           config["namespace"] = @@publisher.namespace
           config["secret"] = @@publisher.secret
         end
