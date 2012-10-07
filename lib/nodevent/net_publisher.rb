@@ -9,7 +9,7 @@ module NoDevent
     format :json
     default_timeout 5
 
-    HOSTNAME="nodevent.com"
+    HOSTNAME="spigot.io"
 
     attr_accessor :namespace
     attr_accessor :secret
@@ -21,7 +21,9 @@ module NoDevent
       self.secret = opts["secret"]
 
       unless self.namespace
-        resp = JSON.parse generate_namespace.body
+        body = generate_namespace.body
+        p "body :#{body}"
+        resp = JSON.parse body
         self.namespace = "/" + resp["id"]
         self.secret = resp["secret"]
       end
@@ -42,16 +44,17 @@ module NoDevent
     end
 
     def generate_namespace
-        require "socket"
-        hostname = Socket.gethostname
-        suffix = " (#{Rails.env})" if defined?(Rails)
-        req = {
-                :body => {
-                    :api_key   => api_key,
-                    :namespace => {"name" => "#{hostname}#{suffix}"}
-                }
+      p "generate_namespace"
+      require "socket"
+      hostname = Socket.gethostname
+      suffix = " (#{Rails.env})" if defined?(Rails)
+      req = {
+              :body => {
+                  :api_key   => api_key,
+                  :namespace => {"name" => "#{hostname}#{suffix}"}
               }
-        self.class.post("http://#{HOSTNAME}/namespaces",req)
+            }
+      self.class.post("http://#{HOSTNAME}/namespaces",req)
     end
   end
 end
