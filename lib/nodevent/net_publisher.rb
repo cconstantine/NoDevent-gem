@@ -22,7 +22,6 @@ module NoDevent
 
       unless self.namespace
         body = generate_namespace.body
-        p "body :#{body}"
         resp = JSON.parse body
         self.namespace = "/" + resp["id"]
         self.secret = resp["secret"]
@@ -44,7 +43,6 @@ module NoDevent
     end
 
     def generate_namespace
-      p "generate_namespace"
       require "socket"
       hostname = Socket.gethostname
       suffix = " (#{Rails.env})" if defined?(Rails)
