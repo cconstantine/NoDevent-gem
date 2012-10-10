@@ -1,3 +1,4 @@
+require 'httparty'
 
 module NoDevent
   class NetPublisher
