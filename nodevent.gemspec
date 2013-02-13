@@ -16,5 +16,4 @@ Gem::Specification.new do |gem|
   gem.version       = Nodevent::VERSION
   
   gem.add_dependency('redis', '>= 2.0.0')
-  gem.add_dependency('httparty', '>= 0.9.0')
 end

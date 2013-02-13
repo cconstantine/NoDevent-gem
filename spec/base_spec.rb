@@ -45,21 +45,6 @@ describe NoDevent do
       it { should == $redis}
 
     end
-
-    describe "with an api_key" do
-      before do
-        NoDevent::Emitter.config = {
-            "host" => "http://thehost",
-            "namespace" => "/nodevent",
-            "secret" => "asdf",
-            "spigot.io" => {
-              "api_key"=> "bar",
-            }
-        }
-      end
-      it { should be_an_instance_of(NoDevent::NetPublisher)}
-      it { should_not == $redis}
-    end
   end
   describe ".config=" do
     describe "the class" do
@@ -127,6 +112,16 @@ describe NoDevent do
         }
       end
       let(:instance) {ModelMock.new( 'theparam') }
+
+      describe "#room_json" do
+        before { Time.stub(:now => Time.new(2011, 1, 10))}
+        subject {instance.room_json(2 * NoDevent::HOUR)}
+        it "should have both the room name and the key" do
+          subject.keys.should =~ [:room, :key]
+          subject[:key].should == instance.room_key(Time.now + 2*NoDevent::HOUR)
+          subject[:room].should == instance.room
+        end
+      end
 
       it { instance.room.should == "ModelMock_theparam" }
       it "should emit to the right room" do
@@ -216,5 +211,5 @@ describe NoDevent do
         end
       end
     end
-   end
+  end
 end

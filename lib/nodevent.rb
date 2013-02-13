@@ -1,9 +1,9 @@
 require 'digest/sha2'
 require 'json'
 require 'redis'
-require 'nodevent/net_publisher'
 
 module NoDevent
+  HOUR = 60 * 60
 
   def self.included(base)
     raise "No longer supported, Please include NoDevent::Base instead"
@@ -37,6 +37,9 @@ module NoDevent
       Emitter.room_key(self.room, expires)
     end
 
+    def room_json(expires_after=HOUR)
+      {room: room, key: room_key(Time.now + expires_after)}
+    end
 
     def nodevent_create
       NoDevent::Emitter.emit(self.class.name, 'create', self)
@@ -50,14 +53,15 @@ module NoDevent
     
 
   module Helper
-    def javascript_include_nodevent
+    def nodevent_url
       host = NoDevent::Emitter.config['host']
       namespace = NoDevent::Emitter.config['namespace']
       namespace = '/' + namespace unless namespace[0] == '/'
-
-
-      "<script src='#{host}/api#{namespace}' type='text/javascript'></script>".html_safe
-    end    
+      "#{host}/api#{namespace}"
+    end
+    def javascript_include_nodevent
+      "<script src='#{nodevent_url}' type='text/javascript'></script>".html_safe
+    end
   end
   ActionView::Base.send :include, Helper if defined?(ActionView::Base)
 
@@ -71,11 +75,6 @@ module NoDevent
           r_config = @@config["redis"]
 
           @@publisher = Redis.new(:host => r_config["host"], :port => r_config["port"], :db => r_config["db"])
-        end
-        if @@config.keys.include?("spigot.io")
-          @@publisher = NoDevent::NetPublisher.new(obj)
-          config["namespace"] = @@publisher.namespace
-          config["secret"] = @@publisher.secret
         end
       end
 
